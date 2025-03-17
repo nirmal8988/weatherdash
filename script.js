@@ -1,4 +1,4 @@
-const apiKey = "8bdabd2dce266bdffd2af75db620d812";
+const apiKey = "8bdabd2dce266bdffd2af75db620d812"; // Replace with your OpenWeatherMap API key
 const weatherIcons = {
     Clear: "☀️",
     Clouds: "☁️",
@@ -12,25 +12,32 @@ const weatherIcons = {
 let isCelsius = true;
 let isDarkMode = false;
 
+// Fetch weather data based on latitude and longitude
 async function fetchWeather(lat, lon) {
     try {
         document.getElementById("loading-spinner").style.display = "block";
         document.getElementById("loading-message").style.display = "block";
 
+        // Fetch current weather data
         const weatherResponse = await fetch(
             `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`
         );
         const weatherData = await weatherResponse.json();
 
-        const temp = isCelsius ? weatherData.main.temp : (weatherData.main.temp * 9/5 + 32).toFixed(2);
+        // Convert temperature to Celsius or Fahrenheit
+        const temp = isCelsius ? weatherData.main.temp : (weatherData.main.temp * 9 / 5 + 32).toFixed(2);
 
+        // Update the DOM with weather information
         document.getElementById("location").innerHTML = `<div class="weather-icon">${weatherIcons[weatherData.weather[0].main] || "🌍"}</div><i class="fas fa-map-marker-alt"></i> ${weatherData.name}`;
         document.getElementById("temperature").innerHTML = `<div class="weather-icon">🌡️</div><i class="fas fa-thermometer-half"></i> ${temp}°${isCelsius ? 'C' : 'F'}`;
         document.getElementById("humidity").innerHTML = `<div class="weather-icon">💧</div><i class="fas fa-tint"></i> ${weatherData.main.humidity}%`;
 
+        // Update wind speed
         const windSpeedKmh = (weatherData.wind.speed * 3.6).toFixed(2);
         updateSpeedometer(windSpeedKmh);
         document.getElementById("wind-speed-text").textContent = `Wind Speed: ${windSpeedKmh} km/h`;
+
+        // Fetch AQI and forecast data
         await fetchAQI(lat, lon);
         await fetchForecast(lat, lon);
     } catch (error) {
@@ -42,10 +49,11 @@ async function fetchWeather(lat, lon) {
     }
 }
 
+// Fetch AQI (Air Quality Index) data
 async function fetchAQI(lat, lon) {
     try {
         const aqiResponse = await fetch(
-            `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`
+            `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}` // Use HTTPS
         );
         const aqiData = await aqiResponse.json();
         const aqiValue = aqiData.list[0].main.aqi;
@@ -57,6 +65,7 @@ async function fetchAQI(lat, lon) {
     }
 }
 
+// Fetch 5-day weather forecast
 async function fetchForecast(lat, lon) {
     try {
         const forecastResponse = await fetch(
@@ -66,11 +75,12 @@ async function fetchForecast(lat, lon) {
         const forecastContainer = document.getElementById("forecast");
         forecastContainer.innerHTML = "";
 
+        // Display the forecast for the next 5 days
         for (let i = 0; i < 5; i++) {
             const forecast = forecastData.list[i * 8];
             const date = new Date(forecast.dt * 1000).toLocaleDateString();
             const icon = weatherIcons[forecast.weather[0].main] || "🌍";
-            const temp = isCelsius ? forecast.main.temp : (forecast.main.temp * 9/5 + 32).toFixed(2);
+            const temp = isCelsius ? forecast.main.temp : (forecast.main.temp * 9 / 5 + 32).toFixed(2);
             const description = forecast.weather[0].description;
 
             forecastContainer.innerHTML += `
@@ -87,12 +97,14 @@ async function fetchForecast(lat, lon) {
     }
 }
 
+// Update the wind speed needle on the speedometer
 function updateSpeedometer(speed) {
     const maxSpeed = 120; // Max speed in km/h
     const rotation = (speed / maxSpeed) * 180 - 90;
     document.getElementById('wind-needle').style.transform = `rotate(${rotation}deg)`;
 }
 
+// Fetch weather data by city name
 async function fetchWeatherByCity(cityName) {
     try {
         document.getElementById("loading-spinner").style.display = "block";
@@ -106,9 +118,10 @@ async function fetchWeatherByCity(cityName) {
             const { lat, lon } = data.coord;
             fetchWeather(lat, lon);
 
+            // Add the searched city to the list
             const searchedCitiesContainer = document.getElementById("searched-cities");
             const icon = weatherIcons[data.weather[0].main] || "🌍";
-            const temp = isCelsius ? data.main.temp : (data.main.temp * 9/5 + 32).toFixed(2);
+            const temp = isCelsius ? data.main.temp : (data.main.temp * 9 / 5 + 32).toFixed(2);
             const cityHTML = `
                 <div class="searched-city">
                     <div class="weather-icon">${icon}</div>
@@ -131,6 +144,7 @@ async function fetchWeatherByCity(cityName) {
     }
 }
 
+// Event listener for the search button
 document.getElementById("search-button").addEventListener("click", () => {
     const cityName = document.getElementById("city-search").value;
     if (cityName) {
@@ -138,6 +152,7 @@ document.getElementById("search-button").addEventListener("click", () => {
     }
 });
 
+// Event listener for the Enter key in the search input
 document.getElementById("city-search").addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
         const cityName = document.getElementById("city-search").value;
@@ -147,6 +162,7 @@ document.getElementById("city-search").addEventListener("keypress", (event) => {
     }
 });
 
+// Share weather data via WhatsApp
 function shareViaWhatsApp() {
     const location = document.getElementById("location").textContent;
     const temperature = document.getElementById("temperature").textContent;
@@ -159,6 +175,7 @@ function shareViaWhatsApp() {
     window.open(url, '_blank');
 }
 
+// Share weather data via Facebook
 function shareViaFacebook() {
     const location = document.getElementById("location").textContent;
     const temperature = document.getElementById("temperature").textContent;
@@ -171,6 +188,7 @@ function shareViaFacebook() {
     window.open(url, '_blank');
 }
 
+// Share weather data via Instagram
 function shareViaInstagram() {
     const location = document.getElementById("location").textContent;
     const temperature = document.getElementById("temperature").textContent;
@@ -183,6 +201,7 @@ function shareViaInstagram() {
     window.open(url, '_blank');
 }
 
+// Toggle between Celsius and Fahrenheit
 function toggleTemperatureUnit() {
     isCelsius = !isCelsius;
     const unitButton = document.getElementById("unit-toggle");
@@ -194,6 +213,7 @@ function toggleTemperatureUnit() {
     }
 }
 
+// Toggle dark mode
 function toggleDarkMode() {
     isDarkMode = !isDarkMode;
     document.body.classList.toggle('dark-mode', isDarkMode);
@@ -206,9 +226,11 @@ function toggleDarkMode() {
     darkModeButton.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
 }
 
+// Event listeners for toggle buttons
 document.getElementById("unit-toggle").addEventListener("click", toggleTemperatureUnit);
 document.getElementById("dark-mode-toggle").addEventListener("click", toggleDarkMode);
 
+// Get the user's current location
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -226,11 +248,12 @@ function getLocation() {
     }
 }
 
+// Show loading spinner and fetch location on page load
 document.getElementById("loading-spinner").style.display = "block";
 document.getElementById("loading-message").style.display = "block";
 getLocation();
 
-// Add this function to fetch city suggestions
+// Fetch city suggestions as the user types
 async function fetchCitySuggestions(query) {
     try {
         const response = await fetch(
@@ -244,7 +267,7 @@ async function fetchCitySuggestions(query) {
     }
 }
 
-// Add this function to display suggestions
+// Display city suggestions in a dropdown
 function showSuggestions(suggestions) {
     const suggestionsContainer = document.createElement("div");
     suggestionsContainer.id = "suggestions-container";
@@ -279,7 +302,7 @@ function showSuggestions(suggestions) {
     searchContainer.appendChild(suggestionsContainer);
 }
 
-// Add event listener for input to show suggestions
+// Event listener for input to show suggestions
 document.getElementById("city-search").addEventListener("input", async (event) => {
     const query = event.target.value;
     if (query.length > 2) {

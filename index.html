@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WeatherDash provides real-time weather and air quality updates for your location.">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
+    <title>WeatherDash</title>
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <h1>WeatherDash</h1>
+            <p>Real-time weather and air quality details</p>
+        </header>
+
+        <div class="main-container">
+            <!-- Left Side: Search Bar and Current Weather -->
+            <div class="left-container">
+                <div class="search-container">
+                    <input type="text" id="city-search" placeholder="Enter city name">
+                    <button id="search-button"><i class="fas fa-search"></i></button>
+                </div>
+
+                <div class="weather-info">
+                    <div class="info-item" id="location">
+                        <div class="weather-icon" id="weather-icon">🌍</div>
+                        <i class="fas fa-map-marker-alt"></i> Fetching...
+                    </div>
+                    <div class="info-item" id="temperature">
+                        <div class="weather-icon" id="temp-icon">🌡️</div>
+                        <i class="fas fa-thermometer-half"></i> --°C
+                    </div>
+                    <div class="info-item" id="humidity">
+                        <div class="weather-icon" id="humidity-icon">💧</div>
+                        <i class="fas fa-tint"></i> --%
+                    </div>
+                    <div class="info-item" id="aqi">
+                        <div class="weather-icon" id="aqi-icon">🌫️</div>
+                        <i class="fas fa-smog"></i> Fetching...
+                    </div>
+                    <div class="info-item" id="wind-speed-box">
+                        <div class="weather-icon">🌬️</div>
+                        <div class="speedometer">
+                            <div class="speedometer-base"></div>
+                            <div class="needle" id="wind-needle"></div>
+                        </div>
+                        <div id="wind-speed-text">Wind Speed: -- km/h</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Searched Cities Forecast -->
+            <div class="right-container">
+                <h2>Searched Cities</h2>
+                <div id="searched-cities"></div>
+            </div>
+        </div>
+
+        <div id="forecast"></div>
+
+        <!-- Buttons at the top-right corner -->
+        <div class="button-container">
+            <div class="social-share hidden">
+                <button class="social-icon whatsapp" onclick="shareViaWhatsApp()"><i class="fab fa-whatsapp"></i></button>
+                <button class="social-icon facebook" onclick="shareViaFacebook()"><i class="fab fa-facebook"></i></button>
+                <button class="social-icon instagram" onclick="shareViaInstagram()"><i class="fab fa-instagram"></i></button>
+            </div>
+            <button id="unit-toggle" class="minimal-button">°C/°F</button>
+            <button id="dark-mode-toggle" class="minimal-button"><i class="fas fa-moon"></i></button>
+        </div>
+
+        <div class="spinner" id="loading-spinner"></div>
+        <div id="loading-message">Fetching weather data...</div>
+    </div>
+</body>
+</html>

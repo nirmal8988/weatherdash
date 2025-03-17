@@ -186,7 +186,7 @@ function shareViaInstagram() {
 function toggleTemperatureUnit() {
     isCelsius = !isCelsius;
     const unitButton = document.getElementById("unit-toggle");
-    unitButton.textContent = `Switch to ${isCelsius ? 'Fahrenheit' : 'Celsius'}`;
+    unitButton.textContent = isCelsius ? '°C' : '°F'; // Shorten the text
     const lat = localStorage.getItem('lat');
     const lon = localStorage.getItem('lon');
     if (lat && lon) {
@@ -229,3 +229,66 @@ function getLocation() {
 document.getElementById("loading-spinner").style.display = "block";
 document.getElementById("loading-message").style.display = "block";
 getLocation();
+
+// Add this function to fetch city suggestions
+async function fetchCitySuggestions(query) {
+    try {
+        const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/find?q=${query}&type=like&sort=population&cnt=5&appid=${apiKey}`
+        );
+        const data = await response.json();
+        return data.list.map(city => city.name);
+    } catch (error) {
+        console.error("Error fetching city suggestions:", error);
+        return [];
+    }
+}
+
+// Add this function to display suggestions
+function showSuggestions(suggestions) {
+    const suggestionsContainer = document.createElement("div");
+    suggestionsContainer.id = "suggestions-container";
+    suggestionsContainer.style.position = "absolute";
+    suggestionsContainer.style.backgroundColor = "#fff";
+    suggestionsContainer.style.border = "1px solid #ccc";
+    suggestionsContainer.style.borderRadius = "8px";
+    suggestionsContainer.style.zIndex = "1000";
+    suggestionsContainer.style.width = "70%";
+    suggestionsContainer.style.maxHeight = "150px";
+    suggestionsContainer.style.overflowY = "auto";
+
+    suggestions.forEach(city => {
+        const suggestionItem = document.createElement("div");
+        suggestionItem.textContent = city;
+        suggestionItem.style.padding = "10px";
+        suggestionItem.style.cursor = "pointer";
+        suggestionItem.style.borderBottom = "1px solid #eee";
+        suggestionItem.addEventListener("click", () => {
+            document.getElementById("city-search").value = city;
+            suggestionsContainer.remove();
+            fetchWeatherByCity(city);
+        });
+        suggestionsContainer.appendChild(suggestionItem);
+    });
+
+    const searchContainer = document.querySelector(".search-container");
+    const existingSuggestions = document.getElementById("suggestions-container");
+    if (existingSuggestions) {
+        existingSuggestions.remove();
+    }
+    searchContainer.appendChild(suggestionsContainer);
+}
+
+// Add event listener for input to show suggestions
+document.getElementById("city-search").addEventListener("input", async (event) => {
+    const query = event.target.value;
+    if (query.length > 2) {
+        const suggestions = await fetchCitySuggestions(query);
+        showSuggestions(suggestions);
+    } else {
+        const existingSuggestions = document.getElementById("suggestions-container");
+        if (existingSuggestions) {
+            existingSuggestions.remove();
+        }
+    }
+});

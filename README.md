@@ -2,7 +2,8 @@
 
 ## What is a Weather Dashboard?
 
-A **Weather Dashboard** is a **web application** that displays current weather information and possibly a forecast for a user’s location or a searched city. It uses **API data** (like OpenWeatherMap) to fetch live weather details and updates the UI dynamically.
+A **Weather Dashboard** is a **web application** that displays current weather information and possibly a forecast for a user’s location or a searched city. 
+It uses **API data** (like OpenWeatherMap) to fetch live weather details and updates the UI dynamically.
 
 ---
 
@@ -14,6 +15,8 @@ A **Weather Dashboard** is a **web application** that displays current weather i
 ✅ Useful for portfolio to showcase frontend skills.
 
 ---
+![image](https://github.com/user-attachments/assets/636b9730-edf9-448a-94a5-bd152fdca37b)
+
 
 ## Structure
 
@@ -125,4 +128,3 @@ document.getElementById("searchBtn").addEventListener("click", () => {
 
 <img width="532" alt="image" src="https://github.com/user-attachments/assets/9ac49420-3794-4c8b-9f07-fc847239f800" />
 
-![image](https://github.com/user-attachments/assets/636b9730-edf9-448a-94a5-bd152fdca37b)

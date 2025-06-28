@@ -14,8 +14,15 @@ It uses **API data** (like OpenWeatherMap) to fetch live weather details and upd
 ✅ Strengthens understanding of **JSON parsing** and **event handling**.
 ✅ Useful for portfolio to showcase frontend skills.
 
----
-![image](https://github.com/user-attachments/assets/636b9730-edf9-448a-94a5-bd152fdca37b)
+
+
+
+![image](https://github.com/user-attachments/assets/0f71f140-337f-47b7-8b9a-be7997264d78)
+
+
+
+
+
 
 
 ## Structure

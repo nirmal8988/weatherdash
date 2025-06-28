@@ -120,3 +120,5 @@ document.getElementById("searchBtn").addEventListener("click", () => {
 ✅ Modular project structuring.
 
 ---
+<img width="532" alt="image" src="https://github.com/user-attachments/assets/9ac49420-3794-4c8b-9f07-fc847239f800" />
+<img width="630" alt="image" src="https://github.com/user-attachments/assets/ec9fa59e-0edd-4785-ad9f-83cc0f383e80" />
